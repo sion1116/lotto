@@ -47,7 +47,7 @@ class ModuleBasic(PluginModuleBase):
         if command == 'test_info' or command == 'test_buy':
             data = self.do_action(mode=command)
             if data['status'] == 'fail':
-                ret['modal'] = d(data['data'])
+                ret['modal'] = data.get('log', str(data))
                 ret['title'] = '에러'
                 ret['data'] = data
             else:
