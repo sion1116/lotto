@@ -25,7 +25,7 @@ class ModuleBasic(PluginModuleBase):
 
             f'driver_mode': 'remote',
             f'driver_local_headless': 'False',
-            f'driver_remote_url': 'http://172.17.0.1:4444/wd/hub',
+            f'driver_remote_url': 'http://172.17.0.1:4444/wd/hub',  # Selenium WebDriver 포트 (4444), noVNC는 7900
             f'user_id': '',
             f'user_passwd': '',
             f'charge_money': '20000',

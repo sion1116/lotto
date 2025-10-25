@@ -46,6 +46,11 @@ docker run -d --name selenium_firefox -p 4444:4444 -p 5900:5900 -p 7900:7900 --s
 - 비밀번호: `secret`
 - 용도: 브라우저 자동화 화면 실시간 모니터링
 
+### 포트 구분 (중요!)
+- **4444**: Selenium WebDriver 포트 (코드에서 사용)
+- **7900**: noVNC 웹 인터페이스 포트 (사람이 브라우저로 접속)
+- **5900**: VNC 포트 (VNC 클라이언트 접속용)
+
 ## 구매 모드 설정 (buy_data)
 
 ```python
@@ -109,3 +114,24 @@ login() → check_deposit() → check_history()
 - 메뉴 구조는 `setting` 딕셔너리의 `menu` 키로 정의
 - 템플릿 파일명: `{package_name}_{module_name}_{sub}.html`
 - 스케줄러: cron 표현식 (`interval` 설정값)
+
+## 트러블슈팅
+
+### Selenium 연결 실패 (501 Unsupported method)
+**증상**: `WebDriverException: Message: Error code: 501, Unsupported method ('POST')`
+
+**원인**: 잘못된 포트 사용 (7900 noVNC 포트를 Selenium 포트로 착각)
+
+**해결**:
+1. 웹 UI → 설정 → Selenium 드라이버 모드 → "리모트" 선택
+2. ID 필드를 다음 중 하나로 설정:
+   - Docker 내부: `http://172.17.0.1:4444/wd/hub`
+   - 외부 접속: `http://서버IP:4444/wd/hub` 또는 `http://서버IP:4444`
+3. 설정 저장 후 "구입 테스트" 버튼으로 확인
+
+### KeyError: 'data' 에러
+**증상**: `process_command`에서 `KeyError: 'data'` 발생
+
+**원인**: `do_action()` 예외 발생 시 'log' 키만 설정하고 'data' 키는 없음
+
+**해결**: 코드에서 `data.get('log', str(data))` 사용 (이미 수정됨)
